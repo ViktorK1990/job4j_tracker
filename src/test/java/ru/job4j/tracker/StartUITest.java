@@ -132,9 +132,10 @@ class StartUITest {
                         + "Menu:" + ln
                         + "0. === Find items by name ===" + ln
                         + "1. === Exit ===" + ln
-                        + "=== Exit program ===" +ln
+                        + "=== Exit program ===" + ln
         );
     }
+
     @Test
     public void whenFindByIdActionIsSuccessfully() {
         Output out = new StubOutput();
@@ -158,7 +159,37 @@ class StartUITest {
                         + "Menu:" + ln
                         + "0. === Find item by id ===" + ln
                         + "1. === Exit ===" + ln
-                        + "=== Exit program ===" +ln
+                        + "=== Exit program ===" + ln
+        );
+    }
+
+    @Test
+    public void whenInvalidExit() {
+        Output out = new StubOutput();
+        Input in = new StubInput(
+                new String[]{"7", "0", "1"}
+        );
+        Tracker tracker = new Tracker();
+        UserAction[] actions = new UserAction[]{
+                new ShowAllAction(out),
+                new ExitAction(out)
+        };
+        new StartUI(out).init(in, tracker, actions);
+        String ln = System.lineSeparator();
+        assertThat(out.toString()).isEqualTo(
+                "Menu:" + ln
+                        + "0. === Show all items ===" + ln
+                        + "1. === Exit ===" + ln
+                        + "Wrong input, you can select: 0 .. 1" + ln
+                        + "Menu:" + ln
+                        + "0. === Show all items ===" + ln
+                        + "1. === Exit ===" + ln
+                        + "=== Show all items ===" + ln
+                        + "Хранилище еще не содержит заявок" + ln
+                        + "Menu:" + ln
+                        + "0. === Show all items ===" + ln
+                        + "1. === Exit ===" + ln
+                        + "=== Exit program ===" + ln
         );
     }
 }

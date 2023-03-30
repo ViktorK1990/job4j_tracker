@@ -16,6 +16,7 @@ public class BankService {
 
     /**
      * Метод добавляет клиента в базу
+     *
      * @param user - новый колиент
      */
     public void addUser(User user) {
@@ -26,6 +27,7 @@ public class BankService {
 
     /**
      * Метод ищет пользователя по паспорту и удаляет его из базы
+     *
      * @param passport - паспорт клиента
      * @return - возвращает true, если клиент был успешно удален из базы
      */
@@ -42,8 +44,9 @@ public class BankService {
 
     /**
      * Метод добавляет счет клиенту, если этого счета еще нет в базе
-     * @param passport  - принимает паспорт
-     * @param account - принимает новый счет
+     *
+     * @param passport - принимает паспорт
+     * @param account  - принимает новый счет
      */
     public void addAccount(String passport, Account account) {
         User user = findByPassport(passport);
@@ -54,60 +57,65 @@ public class BankService {
 
     /**
      * Метод осуществляет поиск клиента по номеру паспорта
+     *
      * @param passport - принимает паспорт
      * @return - возвращает найденного пользователя
      */
+
+
     public User findByPassport(String passport) {
-        for (User user : users.keySet()) {
-            if (user.getPassport().equals(passport)) {
-                return user;
-            }
-        }
-        return null;
+        return users.keySet()
+                .stream()
+                .filter(user -> user.getPassport().equals(passport))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
      * Метод осуществляет поиск счета по реквизитам и номеру паспорта
-     * @param passport - паспорт клиента
+     *
+     * @param passport  - паспорт клиента
      * @param requisite - реквизиты счета
      * @return - возаращает счет клиента
      */
     public Account findByRequisite(String passport, String requisite) {
         User user = findByPassport(passport);
         if (user != null) {
-            for (Account accounts : users.get(user)) {
-                if (accounts.getRequisite().equals(requisite)) {
-                    return accounts;
-                }
-            }
+          return   users.get(user)
+                    .stream()
+                    .filter(e -> e.getRequisite().equals(requisite))
+                    .findFirst()
+                    .orElse(null);
         }
         return null;
     }
 
     /**
      * Метод осуществляет перевод с одгого счета на другой
-     * @param srcPassport -  паспорт клиента который осуществляет перевод
-     * @param srcRequisite - реквизиты счета, с которого будет выполняться перевод
-     * @param destPassport - паспорт клиента, которому будет доставлен перевод
+     *
+     * @param srcPassport   -  паспорт клиента который осуществляет перевод
+     * @param srcRequisite  - реквизиты счета, с которого будет выполняться перевод
+     * @param destPassport  - паспорт клиента, которому будет доставлен перевод
      * @param destRequisite - реквизиты счета, на который будет осуществляться перевод
-     * @param amount - сумма перевода
+     * @param amount        - сумма перевода
      * @return - возвращает true, если перевод был успешным
      */
     public boolean transferMoney(String srcPassport, String srcRequisite,
                                  String destPassport, String destRequisite, double amount) {
         boolean rsl = false;
-      Account accountSrc = findByRequisite(srcPassport, srcRequisite);
-      Account accountDent = findByRequisite(destPassport, destRequisite);
-      if (accountSrc != null && accountDent != null && accountSrc.getBalance() >= amount) {
-          accountSrc.setBalance(accountSrc.getBalance() - amount);
-          accountDent.setBalance(accountDent.getBalance() + amount);
-          rsl = true;
-      }
+        Account accountSrc = findByRequisite(srcPassport, srcRequisite);
+        Account accountDent = findByRequisite(destPassport, destRequisite);
+        if (accountSrc != null && accountDent != null && accountSrc.getBalance() >= amount) {
+            accountSrc.setBalance(accountSrc.getBalance() - amount);
+            accountDent.setBalance(accountDent.getBalance() + amount);
+            rsl = true;
+        }
         return rsl;
     }
 
     /**
      * Возвращает клиента из базы
+     *
      * @param user - клиент
      * @return
      */

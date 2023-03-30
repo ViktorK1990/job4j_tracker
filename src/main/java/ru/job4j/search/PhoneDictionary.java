@@ -19,7 +19,7 @@ public class PhoneDictionary {
         Predicate<Person> predicateAddress = person -> person.getAddress().equals(key);
         Predicate<Person> combine = predicateName.or(predicateSurname).or(predicatePhone).or(predicateAddress);
         ArrayList<Person> result = new ArrayList<>();
-        for (Person person : persons) {
+        for (var person : persons) {
             if (combine.test(person)) {
                 result.add(person);
             }
@@ -28,8 +28,8 @@ public class PhoneDictionary {
     }
 
     public static void main(String[] args) {
-        Person person = new Person("Petr", "Arsentyev", "8903", "Star street");
-        PhoneDictionary phoneDictionary = new PhoneDictionary();
+        var person = new Person("Petr", "Arsentyev", "8903", "Star street");
+        var phoneDictionary = new PhoneDictionary();
         phoneDictionary.add(person);
         System.out.println(phoneDictionary.find("8903").get(0).getName());
     }
